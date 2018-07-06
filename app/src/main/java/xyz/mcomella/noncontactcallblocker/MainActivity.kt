@@ -79,10 +79,7 @@ class MainActivity : AppCompatActivity() {
             return PlaceholderFragment.newInstance(position + 1)
         }
 
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
+        override fun getCount() = 2
     }
 
     /**
