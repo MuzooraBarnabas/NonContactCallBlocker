@@ -14,10 +14,10 @@ class CallBlockService : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
         val number = callDetails.intentExtras[TelecomManager.EXTRA_INCOMING_CALL_ADDRESS] as Uri? // tel:...
-        val isCallBlocked = if (number == null) {
-            true // It's an assumption this is an unknown number, but we want to block unknown numbers.
-        } else {
-            !Contacts.isNumberInContacts(contentResolver, number)
+        val isCallBlocked = when {
+            !Config.get().isBlockingEnabled -> false
+            number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
+            else -> !Contacts.isNumberInContacts(contentResolver, number)
         }
 
         respondToCall(callDetails, getCallResponse(isCallBlocked))
