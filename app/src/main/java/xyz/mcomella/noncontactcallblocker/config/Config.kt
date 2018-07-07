@@ -1,9 +1,10 @@
-package xyz.mcomella.noncontactcallblocker
+package xyz.mcomella.noncontactcallblocker.config
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.support.v7.preference.PreferenceManager
+import xyz.mcomella.noncontactcallblocker.R
 
 class Config private constructor(
         private val sharedPrefs: SharedPreferences,
