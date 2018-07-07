@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         initTabsView()
-        pagerContainer.adapter = MainPagerAdapter(supportFragmentManager)
     }
 
     private fun initTabsView() {
+        pagerContainer.adapter = MainPagerAdapter(supportFragmentManager)
         pagerContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pagerContainer))
     }
