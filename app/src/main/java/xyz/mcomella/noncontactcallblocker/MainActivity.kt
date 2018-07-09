@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.blocklist.CallBlockListFragment
+import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
 
 const val LOGTAG = "NonContactCallBlocker" // max len 23.
@@ -72,8 +73,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun onPermissionsGranted() {
         permissionsRequestContext = null
-        Log.d("lol", "Permissions granted")
-        // TODO: enbale blocking.
+
+        val config = Config.get()
+        if (!config.isInitialPermissionsRequestComplete) {
+            config.isInitialPermissionsRequestComplete = true
+            config.isBlockingEnabled = true // Will animate to visualize to users that blocking is now enabled.
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

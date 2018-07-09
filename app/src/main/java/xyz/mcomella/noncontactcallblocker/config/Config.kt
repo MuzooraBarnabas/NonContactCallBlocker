@@ -24,13 +24,22 @@ import android.content.res.Resources
 import android.support.v7.preference.PreferenceManager
 import xyz.mcomella.noncontactcallblocker.R
 
+private const val KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE = "isInitialPermissionsRequestComplete"
+
 class Config private constructor(
-        private val sharedPrefs: SharedPreferences,
+        val sharedPrefs: SharedPreferences,
         private val res: Resources
 ) {
 
-    val isBlockingEnabled: Boolean get() = sharedPrefs.getBoolean(res.getString(R.string.key_global_enable),
-            res.getBoolean(R.bool.default_global_enable))
+    // The Preference class automatically adds values to shared prefs so we can't just use contain on keyIsBlockingEnabled.
+    var isInitialPermissionsRequestComplete: Boolean
+        get() = sharedPrefs.getBoolean(KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE, false)
+        set(value) = sharedPrefs.edit().putBoolean(KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE, value).apply()
+
+    private val keyIsBlockingEnabled = res.getString(R.string.key_global_enable)
+    var isBlockingEnabled: Boolean
+        get() = sharedPrefs.getBoolean(keyIsBlockingEnabled, res.getBoolean(R.bool.default_global_enable))
+        set(value) = sharedPrefs.edit().putBoolean(keyIsBlockingEnabled, value).apply()
 
     companion object {
         private lateinit var singleton: Config
