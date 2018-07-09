@@ -1,3 +1,23 @@
+Original content in this repository is licensed under the GNU General Public
+License version 3 (included below).
+
+This source code uses libraries licensed under the Apache license, version 2.0.
+These libraries are distributed using Gradle. The source, and thus their
+license files, can be found upstream. A full listing of these libraries can
+be found in the `build.gradle` files. These libraries include, but are not
+limited to:
+- The Android Support Library
+- The Android Architecture Components
+- The Kotlin standard library
+- The Kotlin coroutines library
+
+Material icons, courtesy of https://material.io/tools/icons/, are licensed
+under the Apache license, version 2.0. They are available in the source tree
+under `app/src/*/res/drawable*/material_*`. The license file is available at
+https://www.apache.org/licenses/LICENSE-2.0.html
+
+---
+
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
 
