@@ -45,6 +45,24 @@ class MainActivity : AppCompatActivity() {
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pagerContainer))
     }
 
+    override fun onStart() {
+        super.onStart()
+        val permissionPrompted = Permissions.maybePromptContacts(this)
+        if (!permissionPrompted) {
+            // todo: enable blocking.
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        val permissionsGranted = Permissions.onRequestPermissionsResult(this, requestCode,
+                permissions, grantResults)
+        if (permissionsGranted) {
+            // todo: enable blocking.
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true

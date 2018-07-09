@@ -10,4 +10,11 @@
     <string name="config_global_enable_summary">Calls from phone numbers not in your contacts will be blocked</string>
 
     <string name="block_list_unknown_number">Unknown number</string>
+
+    <string name="dialog_permissions_contacts_title">Read Contacts Permission</string>
+    <string name="dialog_permissions_contacts_not_shared">Your contacts will not be shared with anyone.</string>
+    <!-- %1$s is app_name. %2$s is dialog_permissions_contacts_not_shared -->
+    <string name="dialog_permissions_contacts_message">%1$s will block calls from phone numbers not on your contacts list. In order to do this, the app needs permission to read your contact list. %2$s</string>
+    <string name="dialog_permissions_contacts_denied_message">%1$s cannot block calls from phone numbers not on your contacts list without permission to read your contacts. The app will request these permissions again. %2$s</string>
+    <string name="dialog_permissions_okay">Got it</string>
 </resources>
