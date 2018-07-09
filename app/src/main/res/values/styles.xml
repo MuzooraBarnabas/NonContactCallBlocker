@@ -2,11 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="preferenceTheme">@style/ConfigurationTheme</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
 
-        <item name="preferenceTheme">@style/AppTheme</item>
+    <style name="ConfigurationTheme" parent="PreferenceThemeOverlay.v14.Material">
     </style>
 
     <style name="AppTheme.NoActionBar">
