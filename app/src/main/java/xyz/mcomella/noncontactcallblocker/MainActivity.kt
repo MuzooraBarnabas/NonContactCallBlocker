@@ -18,18 +18,27 @@
 
 package xyz.mcomella.noncontactcallblocker
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.CancellationException
+import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.blocklist.CallBlockListFragment
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
 
 class MainActivity : AppCompatActivity() {
+
+    private val uiLifecycleCancelJob = Job()
+
+    private var isPermissionsRequested = false
+    private lateinit var permissionsRequestContext: Permissions.PermissionsContext
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +56,31 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val permissionPrompted = Permissions.maybePromptContacts(this)
-        if (!permissionPrompted) {
-            // todo: enable blocking.
+        maybeRequestPermissions()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        uiLifecycleCancelJob.cancel(CancellationException("Activity lifecycle has ended"))
+    }
+
+    private fun onPermissionsGranted() {
+        Log.d("lol", "Permissions granted")
+        // TODO: enbale blocking.
+    }
+
+    private fun maybeRequestPermissions() {
+        if (!isPermissionsRequested) {
+            isPermissionsRequested = true
+            permissionsRequestContext = Permissions.maybePromptForRequired(this,
+                    uiLifecycleCancelJob, ::onPermissionsGranted)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        val permissionsGranted = Permissions.onRequestPermissionsResult(this, requestCode,
-                permissions, grantResults)
-        if (permissionsGranted) {
-            // todo: enable blocking.
-        }
+        Permissions.onRequestPermissionsResult(permissionsRequestContext, requestCode, permissions,
+                grantResults)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
