@@ -6,6 +6,8 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import kotlinx.coroutines.experimental.asCoroutineDispatcher
+import xyz.mcomella.noncontactcallblocker.blocklist.BlockedCallDao
+import xyz.mcomella.noncontactcallblocker.blocklist.BlockedCallEntity
 import java.util.concurrent.Executors
 
 private const val DB_NAME = "noncontactcallblocker"

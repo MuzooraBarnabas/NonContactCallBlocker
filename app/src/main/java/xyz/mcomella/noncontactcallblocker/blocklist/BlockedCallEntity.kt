@@ -1,4 +1,4 @@
-package xyz.mcomella.noncontactcallblocker.db
+package xyz.mcomella.noncontactcallblocker.blocklist
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey

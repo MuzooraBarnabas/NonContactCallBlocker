@@ -1,4 +1,4 @@
-package xyz.mcomella.noncontactcallblocker
+package xyz.mcomella.noncontactcallblocker.blocklist
 
 import android.arch.lifecycle.Observer
 import android.content.res.Resources
@@ -15,8 +15,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_call_block_list.view.*
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
+import xyz.mcomella.noncontactcallblocker.R
 import xyz.mcomella.noncontactcallblocker.db.AppDB
-import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import xyz.mcomella.noncontactcallblocker.db.dbDispatcher
 import java.text.DateFormat
 import kotlin.properties.Delegates

@@ -1,4 +1,4 @@
-package xyz.mcomella.noncontactcallblocker.db
+package xyz.mcomella.noncontactcallblocker.blocklist
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao

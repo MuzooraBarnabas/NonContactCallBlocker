@@ -4,12 +4,10 @@ import android.net.Uri
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.TelecomManager
-import android.util.Log
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
-import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import xyz.mcomella.noncontactcallblocker.blocklist.BlockedCallEntity
 import xyz.mcomella.noncontactcallblocker.db.dbDispatcher
 import java.util.*
 
