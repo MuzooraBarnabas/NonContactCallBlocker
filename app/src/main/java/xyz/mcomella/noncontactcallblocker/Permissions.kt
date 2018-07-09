@@ -39,7 +39,6 @@ object Permissions {
 
     data class PermissionsContext(
             internal val activity: Activity,
-            internal val onSuccess: OnPermissionsGranted,
             internal var activeDeferred: CompletableDeferred<Unit>? = null,
             internal var activeDialog: AlertDialog? = null
     )
@@ -57,7 +56,7 @@ object Permissions {
             return existingPermissionsContext
         }
 
-        val permissionsContext = PermissionsContext(activity, onSuccess)
+        val permissionsContext = PermissionsContext(activity)
         launch(UI + uiCancelJob, CoroutineStart.UNDISPATCHED) {
             maybePromptContacts(permissionsContext).await()
             maybePromptDefaultDialer(permissionsContext).await()
