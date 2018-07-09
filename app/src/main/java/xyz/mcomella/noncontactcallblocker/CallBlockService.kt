@@ -4,9 +4,13 @@ import android.net.Uri
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.TelecomManager
+import android.util.Log
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import xyz.mcomella.noncontactcallblocker.db.dbDispatcher
 import java.util.*
 
 /** The call blocking logic in the app. */
@@ -22,8 +26,10 @@ class CallBlockService : CallScreeningService() {
 
         respondToCall(callDetails, getCallResponse(isCallBlocked))
         if (isCallBlocked) {
-            val blockedCall = BlockedCallEntity(number?.host, Date(System.currentTimeMillis()))
-            AppDB.db.blockedCallDao().insertBlockedCalls(blockedCall)
+            val blockedCall = BlockedCallEntity(number?.schemeSpecificPart, Date(System.currentTimeMillis()))
+            launch(dbDispatcher) {
+                AppDB.db.blockedCallDao().insertBlockedCalls(blockedCall)
+            }
         }
     }
 
