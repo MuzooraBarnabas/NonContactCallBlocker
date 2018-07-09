@@ -6,7 +6,8 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="config_global_enable">Enabled</string>
+    <string name="config_global_enable">Call blocking enabled</string>
+    <string name="config_global_enable_summary">Calls from phone numbers not in your contacts will be blocked</string>
 
     <string name="block_list_unknown_number">Unknown number</string>
 </resources>
