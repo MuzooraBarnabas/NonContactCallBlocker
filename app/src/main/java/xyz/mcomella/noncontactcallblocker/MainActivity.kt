@@ -33,12 +33,13 @@ import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.blocklist.CallBlockListFragment
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
 
+const val LOGTAG = "NonContactCallBlocker" // max len 23.
+
 class MainActivity : AppCompatActivity() {
 
     private val uiLifecycleCancelJob = Job()
 
-    private var isPermissionsRequested = false
-    private lateinit var permissionsRequestContext: Permissions.PermissionsContext
+    private var permissionsRequestContext: Permissions.PermissionsContext? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,23 +65,26 @@ class MainActivity : AppCompatActivity() {
         uiLifecycleCancelJob.cancel(CancellationException("Activity lifecycle has ended"))
     }
 
-    private fun onPermissionsGranted() {
-        Log.d("lol", "Permissions granted")
-        // TODO: enbale blocking.
+    private fun maybeRequestPermissions() {
+        permissionsRequestContext = Permissions.maybePromptForRequired(permissionsRequestContext,
+                this, uiLifecycleCancelJob, ::onPermissionsGranted)
     }
 
-    private fun maybeRequestPermissions() {
-        if (!isPermissionsRequested) {
-            isPermissionsRequested = true
-            permissionsRequestContext = Permissions.maybePromptForRequired(this,
-                    uiLifecycleCancelJob, ::onPermissionsGranted)
-        }
+    private fun onPermissionsGranted() {
+        permissionsRequestContext = null
+        Log.d("lol", "Permissions granted")
+        // TODO: enbale blocking.
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         Permissions.onRequestPermissionsResult(permissionsRequestContext, requestCode, permissions,
                 grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Permissions.onActivityResult(permissionsRequestContext, requestCode, resultCode)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

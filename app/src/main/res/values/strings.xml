@@ -17,4 +17,8 @@
     <string name="dialog_permissions_contacts_message">%1$s will block calls from phone numbers not on your contacts list. In order to do this, the app needs permission to read your contact list. %2$s</string>
     <string name="dialog_permissions_contacts_denied_message">%1$s cannot block calls from phone numbers not on your contacts list without permission to read your contacts. The app will request these permissions again. %2$s</string>
     <string name="dialog_permissions_okay">Got it</string>
+
+    <string name="dialog_permissions_dialer_title">Default Dialer Permission</string>
+    <string name="dialog_permissions_dialer_message">In order to block calls, the Android system requires apps to become the default dialer: this will have no effect besides letting %1$s screen calls. The app will request to be the default dialer now.</string>
+    <string name="dialog_permissions_dialer_denied_message">%1$s cannot block calls without being the default dialer: the app will make this request again.</string>
 </resources>
