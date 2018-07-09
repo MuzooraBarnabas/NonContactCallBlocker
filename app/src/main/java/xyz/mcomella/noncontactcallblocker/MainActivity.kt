@@ -18,18 +18,29 @@
 
 package xyz.mcomella.noncontactcallblocker
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.CancellationException
+import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.blocklist.CallBlockListFragment
+import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
 
+const val LOGTAG = "NonContactCallBlocker" // max len 23.
+
 class MainActivity : AppCompatActivity() {
+
+    private val uiLifecycleCancelJob = Job()
+
+    private var permissionsRequestContext: Permissions.PermissionsContext? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +54,42 @@ class MainActivity : AppCompatActivity() {
         pagerContainer.adapter = MainPagerAdapter(supportFragmentManager)
         pagerContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pagerContainer))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        maybeRequestPermissions()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        uiLifecycleCancelJob.cancel(CancellationException("Activity lifecycle has ended"))
+    }
+
+    private fun maybeRequestPermissions() {
+        permissionsRequestContext = Permissions.maybePromptForRequired(permissionsRequestContext,
+                this, uiLifecycleCancelJob, ::onPermissionsGranted)
+    }
+
+    private fun onPermissionsGranted() {
+        permissionsRequestContext = null
+
+        val config = Config.get()
+        if (!config.isInitialPermissionsRequestComplete) {
+            config.isInitialPermissionsRequestComplete = true
+            config.isBlockingEnabled = true // Will animate to visualize to users that blocking is now enabled.
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Permissions.onRequestPermissionsResult(permissionsRequestContext, requestCode, permissions,
+                grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Permissions.onActivityResult(permissionsRequestContext, requestCode, resultCode)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -6,4 +6,6 @@ TODO: this.
 - Click Run
 
 ## License
-This project is licensed under the GNU General Public License version 3.
+Original content in this repository is licensed under the GNU General Public
+License version 3. A full listing of the licenses of included software can be
+found in `./LICENSE`.
