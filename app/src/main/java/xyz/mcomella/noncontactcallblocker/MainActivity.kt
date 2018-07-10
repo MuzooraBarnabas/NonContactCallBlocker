@@ -24,7 +24,6 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,6 +32,7 @@ import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.blocklist.CallBlockListFragment
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
+import xyz.mcomella.noncontactcallblocker.rights.SoftwareRightsActivity
 
 const val LOGTAG = "NonContactCallBlocker" // max len 23.
 
@@ -98,16 +98,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
+        when (item.itemId) {
+            R.id.action_rights -> startActivity(Intent(this, SoftwareRightsActivity::class.java))
 
-        if (id == R.id.action_settings) {
-            return true
+            else -> return super.onOptionsItemSelected(item)
         }
 
-        return super.onOptionsItemSelected(item)
+        return true
     }
 }
 

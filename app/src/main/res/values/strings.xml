@@ -4,7 +4,7 @@
     <string name="tab_title_config">Config</string>
     <string name="tab_title_log">Block Log</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_rights">Software Rights</string>
 
     <string name="config_global_enable">Call blocking enabled</string>
     <string name="config_global_enable_summary">Calls from phone numbers not in your contacts will be blocked</string>
@@ -21,4 +21,7 @@
     <string name="dialog_permissions_dialer_title">Default Dialer Permission</string>
     <string name="dialog_permissions_dialer_message">In order to block calls, the Android system requires apps to become the default dialer: this will have no effect besides letting %1$s screen calls. The app will request to be the default dialer now.</string>
     <string name="dialog_permissions_dialer_denied_message">%1$s cannot block calls without being the default dialer: the app will make this request again.</string>
+
+    <string name="rights_more">Source code (opens in browser)</string>
+    <string name="rights_content">Copyright © 2018 Michael Comella\n\nThis software comes with no warranty. This software is free software, licensed under the GNU General Public License version 3: you may modify and redistribute it under these terms. The license, a privacy policy, and a full listing of other license of dependent software, can be found with the source code below.</string>
 </resources>

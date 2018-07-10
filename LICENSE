@@ -1,5 +1,8 @@
-Original content in this repository is licensed under the GNU General Public
-License version 3 (included below).
+Copyright (C) 2018 Michael Comella
+
+This software comes with no warranty. This software is free software, licensed
+under the GNU General Public License version 3 (included below): you may modify
+and redistribute it under these terms.
 
 This source code uses libraries licensed under the Apache license, version 2.0.
 These libraries are distributed using Gradle. The source, and thus their
