@@ -19,6 +19,7 @@
 package xyz.mcomella.noncontactcallblocker
 
 import android.app.Application
+import android.os.StrictMode
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
 
@@ -27,5 +28,21 @@ class CallBlockApplication : Application() {
         super.onCreate()
         AppDB.init(this)
         Config.init(this)
+
+        initStrictMode()
+    }
+
+    private fun initStrictMode() {
+        StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyDeath()
+                .build()
+                .let { StrictMode.setThreadPolicy(it) }
+
+        StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyDeath()
+                .build()
+                .let { StrictMode.setVmPolicy(it) }
     }
 }
