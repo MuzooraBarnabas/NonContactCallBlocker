@@ -19,9 +19,12 @@
 package xyz.mcomella.noncontactcallblocker.blocklist
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.recyclerview.extensions.ListAdapter
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.telephony.PhoneNumberUtils
@@ -30,12 +33,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_call_block_list.view.*
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.android.synthetic.main.fragment_call_block_list.*
 import xyz.mcomella.noncontactcallblocker.R
-import xyz.mcomella.noncontactcallblocker.db.AppDB
-import xyz.mcomella.noncontactcallblocker.db.dbDispatcher
 import java.text.DateFormat
 import kotlin.properties.Delegates
 
@@ -43,22 +42,25 @@ import kotlin.properties.Delegates
 class CallBlockListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val layout = inflater.inflate(R.layout.fragment_call_block_list, container, false)
+        return inflater.inflate(R.layout.fragment_call_block_list, container, false)
+    }
 
-        layout.callBlockList.apply {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val context = context!! // Activity is created.
+
+        val blockListAdapter = CallBlockListAdapter(context.resources)
+        callBlockList.apply {
             layoutManager = LinearLayoutManager(context, VERTICAL, false)
-
-            val blockListAdapter = CallBlockListAdapter(context.resources)
             adapter = blockListAdapter
-            launch {
-                val blockedCallLiveData = withContext(dbDispatcher) { AppDB.db.blockedCallDao().loadBlockedCalls() }
-                blockedCallLiveData.observe(this@CallBlockListFragment, Observer<List<BlockedCallEntity>> { newList ->
-                    blockListAdapter.blockList = newList!!
-                })
-            }
         }
 
-        return layout
+        val viewModelFactory = CallBlockListViewModel.Factory()
+        val callBlockListViewModel =
+                ViewModelProviders.of(this, viewModelFactory)[CallBlockListViewModel::class.java]
+        callBlockListViewModel.blockedCalls.observe(this, Observer { blockedCalls ->
+            blockListAdapter.submitList(blockedCalls)
+        })
     }
 
     companion object {
@@ -66,13 +68,12 @@ class CallBlockListFragment : Fragment() {
     }
 }
 
-private class CallBlockListAdapter(res: Resources) : RecyclerView.Adapter<CallBlockListViewHolder>() {
+private class CallBlockListAdapter(
+        res: Resources
+) : ListAdapter<BlockedCallEntity, CallBlockListViewHolder>(DiffCallback()) {
+
     private val unknownNumberString = res.getString(R.string.block_list_unknown_number)
     private val dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
-
-    var blockList by Delegates.observable(emptyList<BlockedCallEntity>()) { _, _, _ -> notifyDataSetChanged() }
-
-    override fun getItemCount() = blockList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CallBlockListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -80,7 +81,7 @@ private class CallBlockListAdapter(res: Resources) : RecyclerView.Adapter<CallBl
     }
 
     override fun onBindViewHolder(holder: CallBlockListViewHolder, position: Int) = with (holder) {
-        val blockedNumberEntity = blockList[position]
+        val blockedNumberEntity = getItem(position)
         numberView.text = if (blockedNumberEntity.number != null) {
 //            PhoneNumberUtils.formatNumber(blockedNumberEntity.number, "US") // TODO: Country okay?
             PhoneNumberUtils.formatNumber(blockedNumberEntity.number) // TODO: can't get to work.
@@ -89,6 +90,16 @@ private class CallBlockListAdapter(res: Resources) : RecyclerView.Adapter<CallBl
         }
 
         dateView.text = dateFormat.format(blockedNumberEntity.date)
+    }
+
+    private class DiffCallback : DiffUtil.ItemCallback<BlockedCallEntity>() {
+        override fun areItemsTheSame(oldItem: BlockedCallEntity, newItem: BlockedCallEntity): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: BlockedCallEntity, newItem: BlockedCallEntity): Boolean {
+            return oldItem == newItem
+        }
     }
 }
 

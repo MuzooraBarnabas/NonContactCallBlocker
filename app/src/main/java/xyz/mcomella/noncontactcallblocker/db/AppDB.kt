@@ -30,8 +30,6 @@ import java.util.concurrent.Executors
 
 private const val DB_NAME = "noncontactcallblocker"
 
-val dbDispatcher = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
-
 /** Application database. */
 @Database(entities = [BlockedCallEntity::class], version = 1)
 @TypeConverters(Converters::class)
@@ -41,6 +39,8 @@ abstract class AppDB : RoomDatabase() {
     companion object {
         private lateinit var _db: AppDB
         val db get() = _db
+
+        val dbDispatcher = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
 
         fun init(context: Context) {
             _db = Room.databaseBuilder(context.applicationContext, AppDB::class.java, DB_NAME).build()

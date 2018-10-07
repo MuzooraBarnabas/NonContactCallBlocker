@@ -26,7 +26,7 @@ import kotlinx.coroutines.experimental.launch
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
 import xyz.mcomella.noncontactcallblocker.blocklist.BlockedCallEntity
-import xyz.mcomella.noncontactcallblocker.db.dbDispatcher
+import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
 import java.util.*
 
 /** The call blocking logic in the app. */
