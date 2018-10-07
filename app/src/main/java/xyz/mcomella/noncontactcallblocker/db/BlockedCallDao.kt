@@ -16,7 +16,7 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.blocklist
+package xyz.mcomella.noncontactcallblocker.db
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao

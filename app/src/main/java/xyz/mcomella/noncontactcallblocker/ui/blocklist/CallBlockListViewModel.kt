@@ -16,12 +16,14 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.blocklist
+package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import xyz.mcomella.noncontactcallblocker.db.AppDB
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallRepository
 
 class CallBlockListViewModel(blockedCallRepository: BlockedCallRepository) : ViewModel() {
 

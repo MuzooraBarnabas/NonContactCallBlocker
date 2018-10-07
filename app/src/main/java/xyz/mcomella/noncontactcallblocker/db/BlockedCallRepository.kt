@@ -16,17 +16,13 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.blocklist
+package xyz.mcomella.noncontactcallblocker.db
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import java.util.Date
+import android.arch.lifecycle.LiveData
 
-/** Table for blocked calls. */
-@Entity(tableName = "blocked_calls")
-data class BlockedCallEntity(
-        val number: String?,
-        val date: Date
-) {
-    @PrimaryKey(autoGenerate = true) var id: Long = 0
+class BlockedCallRepository(private val database: AppDB) {
+
+    fun getBlockedCalls(): LiveData<List<BlockedCallEntity>> {
+        return database.blockedCallDao().loadBlockedCalls()
+    }
 }

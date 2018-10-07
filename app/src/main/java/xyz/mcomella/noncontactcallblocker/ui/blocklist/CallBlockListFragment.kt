@@ -16,7 +16,7 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.blocklist
+package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -35,8 +35,8 @@ import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_call_block_list.*
 import xyz.mcomella.noncontactcallblocker.R
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import java.text.DateFormat
-import kotlin.properties.Delegates
 
 /** The screen that lists blocked calls. */
 class CallBlockListFragment : Fragment() {
