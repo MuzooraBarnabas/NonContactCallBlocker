@@ -22,7 +22,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
-import xyz.mcomella.noncontactcallblocker.db.BlockedCallRepository
+import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
 import xyz.mcomella.noncontactcallblocker.ext.toApp
 
 class CallBlockListViewModel(application: Application) : AndroidViewModel(application) {

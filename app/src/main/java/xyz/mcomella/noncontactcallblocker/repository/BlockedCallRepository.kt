@@ -16,9 +16,11 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.db
+package xyz.mcomella.noncontactcallblocker.repository
 
 import android.arch.lifecycle.LiveData
+import xyz.mcomella.noncontactcallblocker.db.AppDB
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 
 class BlockedCallRepository(private val database: AppDB) {
 
