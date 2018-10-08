@@ -19,12 +19,26 @@
 package xyz.mcomella.noncontactcallblocker.repository
 
 import android.arch.lifecycle.LiveData
+import android.support.annotation.AnyThread
+import kotlinx.coroutines.experimental.launch
 import xyz.mcomella.noncontactcallblocker.db.AppDB
+import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import java.util.*
 
-class BlockedCallRepository(private val database: AppDB) {
+class BlockedCallRepository(database: AppDB) {
+
+    private val blockedCallDao = database.blockedCallDao()
 
     fun getBlockedCalls(): LiveData<List<BlockedCallEntity>> {
-        return database.blockedCallDao().loadBlockedCalls()
+        return blockedCallDao.loadBlockedCalls()
+    }
+
+    @AnyThread
+    fun onCallBlocked(number: String?, date: Date) {
+        val entity = BlockedCallEntity(number, date)
+        launch(dbDispatcher) {
+            blockedCallDao.insertBlockedCalls(entity)
+        }
     }
 }

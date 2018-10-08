@@ -27,7 +27,7 @@ import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
 open class CallBlockApplication : Application() {
 
     open val blockedCallRepository: BlockedCallRepository by lazy { BlockedCallRepository(db) }
-    open val db: AppDB by lazy { AppDB.create(this) }
+    private val db: AppDB by lazy { AppDB.create(this) }
     open val config: Config by lazy { Config.create(this) }
 
     override fun onCreate() {
