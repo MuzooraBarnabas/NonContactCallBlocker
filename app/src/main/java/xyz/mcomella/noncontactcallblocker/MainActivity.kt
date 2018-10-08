@@ -32,6 +32,7 @@ import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListFragment
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
+import xyz.mcomella.noncontactcallblocker.ext.toApp
 import xyz.mcomella.noncontactcallblocker.rights.SoftwareRightsActivity
 
 const val LOGTAG = "NonContactCallBlocker" // max len 23.
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     private fun onPermissionsGranted() {
         permissionsRequestContext = null
 
-        val config = Config.get()
+        val config = this.toApp().config
         if (!config.isInitialPermissionsRequestComplete) {
             config.isInitialPermissionsRequestComplete = true
             config.isBlockingEnabled = true // Will animate to visualize to users that blocking is now enabled.

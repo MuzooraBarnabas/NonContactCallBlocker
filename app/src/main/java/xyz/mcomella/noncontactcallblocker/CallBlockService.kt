@@ -23,10 +23,9 @@ import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.TelecomManager
 import kotlinx.coroutines.experimental.launch
-import xyz.mcomella.noncontactcallblocker.config.Config
-import xyz.mcomella.noncontactcallblocker.db.AppDB
 import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import xyz.mcomella.noncontactcallblocker.ext.toApp
 import java.util.*
 
 /** The call blocking logic in the app. */
@@ -35,7 +34,7 @@ class CallBlockService : CallScreeningService() {
     override fun onScreenCall(callDetails: Call.Details) {
         val number = callDetails.intentExtras[TelecomManager.EXTRA_INCOMING_CALL_ADDRESS] as Uri? // tel:...
         val isCallBlocked = when {
-            !Config.get().isBlockingEnabled -> false
+            !this.toApp().config.isBlockingEnabled -> false
             number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
             else -> !Contacts.isNumberInContacts(contentResolver, number)
         }
@@ -44,7 +43,7 @@ class CallBlockService : CallScreeningService() {
         if (isCallBlocked) {
             val blockedCall = BlockedCallEntity(number?.schemeSpecificPart, Date(System.currentTimeMillis()))
             launch(dbDispatcher) {
-                AppDB.db.blockedCallDao().insertBlockedCalls(blockedCall)
+                this@CallBlockService.toApp().db.blockedCallDao().insertBlockedCalls(blockedCall)
             }
         }
     }

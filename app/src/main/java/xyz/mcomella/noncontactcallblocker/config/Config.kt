@@ -42,11 +42,8 @@ class Config private constructor(
         set(value) = sharedPrefs.edit().putBoolean(keyIsBlockingEnabled, value).apply()
 
     companion object {
-        private lateinit var singleton: Config
-        fun get() = singleton
-
-        fun init(context: Context) {
-            singleton = Config(PreferenceManager.getDefaultSharedPreferences(context), context.resources)
+        fun create(context: Context): Config {
+            return Config(PreferenceManager.getDefaultSharedPreferences(context), context.resources)
         }
     }
 }

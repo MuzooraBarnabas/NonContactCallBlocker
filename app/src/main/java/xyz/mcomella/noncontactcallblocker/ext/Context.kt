@@ -16,16 +16,9 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.ui.blocklist
+package xyz.mcomella.noncontactcallblocker.ext
 
-import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
-import xyz.mcomella.noncontactcallblocker.db.BlockedCallRepository
-import xyz.mcomella.noncontactcallblocker.ext.toApp
+import android.content.Context
+import xyz.mcomella.noncontactcallblocker.CallBlockApplication
 
-class CallBlockListViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = BlockedCallRepository(application.toApp().db)
-    val blockedCalls: LiveData<List<BlockedCallEntity>> = repository.getBlockedCalls()
-}
+fun Context.toApp(): CallBlockApplication = (this.applicationContext as CallBlockApplication)

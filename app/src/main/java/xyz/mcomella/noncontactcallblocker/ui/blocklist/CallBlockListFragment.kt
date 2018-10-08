@@ -55,9 +55,7 @@ class CallBlockListFragment : Fragment() {
             adapter = blockListAdapter
         }
 
-        val viewModelFactory = CallBlockListViewModel.Factory()
-        val callBlockListViewModel =
-                ViewModelProviders.of(this, viewModelFactory)[CallBlockListViewModel::class.java]
+        val callBlockListViewModel = ViewModelProviders.of(this)[CallBlockListViewModel::class.java]
         callBlockListViewModel.blockedCalls.observe(this, Observer { blockedCalls ->
             blockListAdapter.submitList(blockedCalls)
         })

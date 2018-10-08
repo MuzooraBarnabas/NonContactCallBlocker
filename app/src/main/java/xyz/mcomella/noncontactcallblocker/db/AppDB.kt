@@ -35,13 +35,10 @@ abstract class AppDB : RoomDatabase() {
     abstract fun blockedCallDao(): BlockedCallDao
 
     companion object {
-        private lateinit var _db: AppDB
-        val db get() = _db
-
         val dbDispatcher = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
 
-        fun init(context: Context) {
-            _db = Room.databaseBuilder(context.applicationContext, AppDB::class.java, DB_NAME).build()
+        fun create(context: Context): AppDB {
+            return Room.databaseBuilder(context.applicationContext, AppDB::class.java, DB_NAME).build()
         }
     }
 }

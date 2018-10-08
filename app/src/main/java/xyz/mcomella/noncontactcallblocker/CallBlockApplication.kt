@@ -23,13 +23,14 @@ import android.os.StrictMode
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
 
-class CallBlockApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        AppDB.init(this)
-        Config.init(this)
+open class CallBlockApplication : Application() {
 
+    open val db: AppDB by lazy { AppDB.create(this) }
+    open val config: Config by lazy { Config.create(this) }
+
+    override fun onCreate() {
         initStrictMode()
+        super.onCreate()
     }
 
     private fun initStrictMode() {
