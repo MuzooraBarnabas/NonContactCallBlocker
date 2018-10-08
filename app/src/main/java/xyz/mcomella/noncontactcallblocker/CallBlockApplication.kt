@@ -22,9 +22,11 @@ import android.app.Application
 import android.os.StrictMode
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
+import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
 
 open class CallBlockApplication : Application() {
 
+    open val blockedCallRepository: BlockedCallRepository by lazy { BlockedCallRepository(db) }
     open val db: AppDB by lazy { AppDB.create(this) }
     open val config: Config by lazy { Config.create(this) }
 

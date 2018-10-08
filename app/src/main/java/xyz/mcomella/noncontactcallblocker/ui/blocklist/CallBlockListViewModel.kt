@@ -26,6 +26,6 @@ import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
 import xyz.mcomella.noncontactcallblocker.ext.toApp
 
 class CallBlockListViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = BlockedCallRepository(application.toApp().db)
-    val blockedCalls: LiveData<List<BlockedCallEntity>> = repository.getBlockedCalls()
+    val blockedCalls: LiveData<List<BlockedCallEntity>> =
+            application.toApp().blockedCallRepository.getBlockedCalls()
 }
