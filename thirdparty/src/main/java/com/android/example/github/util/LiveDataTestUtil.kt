@@ -16,9 +16,13 @@
 
 package com.android.example.github.util
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+/*
+ * NonContactCallBlocker modifications:
+ * - Use old support library instead of androidx.
+ */
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
