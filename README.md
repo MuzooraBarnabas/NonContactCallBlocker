@@ -1,9 +1,15 @@
 # Non-Contact Call Blocker
 TODO: this.
 
-## Build
+## Development
 - Open project in Android Studio
 - Click Run
+
+### Recommended pre-push hook
+Set up with:
+```sh
+ln -s ../../tools/hooks/pre-push-recommended.sh .git/hooks/pre-push
+```
 
 ## License
 Copyright (C) 2018 Michael Comella
