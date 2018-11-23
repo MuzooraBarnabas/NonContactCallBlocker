@@ -21,14 +21,14 @@ package xyz.mcomella.noncontactcallblocker.repository
 import android.arch.lifecycle.LiveData
 import android.support.annotation.AnyThread
 import kotlinx.coroutines.experimental.launch
-import xyz.mcomella.noncontactcallblocker.db.AppDB
 import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import java.util.*
 
-class BlockedCallRepository(database: AppDB) {
-
-    private val blockedCallDao = database.blockedCallDao()
+class BlockedCallRepository(
+        private val blockedCallDao: BlockedCallDao
+) {
 
     fun getBlockedCalls(): LiveData<List<BlockedCallEntity>> {
         return blockedCallDao.loadBlockedCalls()
