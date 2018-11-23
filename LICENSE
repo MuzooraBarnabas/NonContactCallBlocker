@@ -4,6 +4,10 @@ This software comes with no warranty. This software is free software, licensed
 under the GNU General Public License version 3 or any later version
 (included below): you may modify and redistribute it under these terms.
 
+The source code may include thirdparty code originally licensed under different
+licenses. This code may be found in the :thirdparty gradle project and their
+licenses are included at the top of the files.
+
 This source code uses libraries licensed under the Apache license, version 2.0.
 These libraries are distributed using Gradle. The source, and thus their
 license files, can be found upstream. A full listing of these libraries can
