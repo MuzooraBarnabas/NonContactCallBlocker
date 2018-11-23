@@ -49,8 +49,8 @@ class CallBlockListViewModelTest {
 
     @Test
     fun `WHEN an empty list is received THEN an empty list is returned`() {
-        viewModel.blockedCalls.observeForever { assertEquals(emptyList<BlockedCallEntity>(), it) }
         blockedCalls.postValue(listOf())
+        assertEquals(emptyList<List<BlockedCallEntity>>(), viewModel.blockedCalls.value)
     }
 
     @Test
@@ -59,7 +59,7 @@ class CallBlockListViewModelTest {
                 BlockedCallEntity("5555555555", Date()),
                 BlockedCallEntity("5556666666", Date(1234567))
         )
-        viewModel.blockedCalls.observeForever { assertEquals(expected, it) }
         blockedCalls.postValue(expected.toList()) // copy to ensure reference equality isn't used.
+        assertEquals(expected, blockedCalls.value)
     }
 }
