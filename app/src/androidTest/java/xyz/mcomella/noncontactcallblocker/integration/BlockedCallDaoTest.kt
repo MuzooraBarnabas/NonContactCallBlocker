@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
-import xyz.mcomella.noncontactcallblocker.helpers.ext.testValue
+import xyz.mcomella.noncontactcallblocker.ext.testValue
 import java.util.*
 
 class BlockedCallDaoTest : AppDBTest() {
@@ -37,21 +37,21 @@ class BlockedCallDaoTest : AppDBTest() {
 
     @Test
     fun GIVEN_an_empty_db_THEN_the_blocked_calls_list_is_empty() {
-        assertEquals(emptyList<List<BlockedCallEntity>>(), dao.loadBlockedCalls().testValue())
+        assertEquals(emptyList<List<BlockedCallEntity>>(), dao.loadBlockedCalls().testValue)
     }
 
     @Test
     fun WHEN_one_full_call_is_inserted_into_the_db_THEN_load_will_return_it() {
         val expected = listOf(BlockedCallEntity("5555555555", Date(1234567)))
         dao.insertBlockedCalls(*expected.toTypedArray())
-        assertEquals(expected, dao.loadBlockedCalls().testValue())
+        assertEquals(expected, dao.loadBlockedCalls().testValue)
     }
 
     @Test
     fun WHEN_one_incomplete_call_is_inserted_into_the_db_THEN_load_will_return_it() {
         val expected = listOf(BlockedCallEntity(null, Date(1234567)))
         dao.insertBlockedCalls(*expected.toTypedArray())
-        assertEquals(expected, dao.loadBlockedCalls().testValue())
+        assertEquals(expected, dao.loadBlockedCalls().testValue)
     }
 
     @Test
@@ -64,7 +64,7 @@ class BlockedCallDaoTest : AppDBTest() {
         ).map { (number, date) -> BlockedCallEntity(number, date) }.toTypedArray()
         dao.insertBlockedCalls(*input)
 
-        val actual = dao.loadBlockedCalls().testValue()
+        val actual = dao.loadBlockedCalls().testValue
         val expected = actual.sortedByDescending { it.date }
         assertEquals(expected, actual)
     }

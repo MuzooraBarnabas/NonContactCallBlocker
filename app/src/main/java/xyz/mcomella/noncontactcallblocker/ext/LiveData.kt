@@ -16,15 +16,23 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.helpers.ext
+package xyz.mcomella.noncontactcallblocker.ext
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Transformations
+import android.support.annotation.VisibleForTesting
+import android.support.annotation.VisibleForTesting.*
 import com.android.example.github.util.LiveDataTestUtil
+
+fun <T, R> LiveData<T>.map(mapFun: (v: T) -> R): LiveData<R> {
+    return Transformations.map(this, mapFun)
+}
 
 /**
  * Waits for the [LiveData.getValue] to be updated and returns the result: intended to replace
  * [LiveData.getValue] during tests.
+ *
+ * This is placed in production code to share it with test and androidTest.
  */
-fun <T> LiveData<T>.testValue(): T {
-    return LiveDataTestUtil.getValue(this)
-}
+@VisibleForTesting(otherwise = NONE) val <T> LiveData<T>.testValue: T
+    get() = LiveDataTestUtil.getValue(this)
