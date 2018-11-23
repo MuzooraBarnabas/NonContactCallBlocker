@@ -16,17 +16,22 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.ui.blocklist
+package xyz.mcomella.noncontactcallblocker
 
-import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
-import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
-import xyz.mcomella.noncontactcallblocker.ext.toApp
+import android.arch.lifecycle.ViewModelProvider
+import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListViewModel
 
-class CallBlockListViewModel(blockedCallRepository: BlockedCallRepository) : ViewModel() {
-    val blockedCalls: LiveData<List<BlockedCallEntity>> =
-            blockedCallRepository.getBlockedCalls()
+/**
+ * A factory for view models created in the call block app.
+ */
+class ViewModelFactory(private val app: CallBlockApplication) : ViewModelProvider.Factory {
+
+    @Suppress("UNCHECKED_CAST") // Required for types
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return when (modelClass) {
+            CallBlockListViewModel::class.java -> CallBlockListViewModel(app.blockedCallRepository)
+            else -> throw IllegalArgumentException("Unknown view model class $modelClass")
+        } as T
+    }
 }

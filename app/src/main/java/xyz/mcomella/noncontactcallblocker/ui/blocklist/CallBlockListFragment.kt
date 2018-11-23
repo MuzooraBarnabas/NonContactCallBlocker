@@ -36,6 +36,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_call_block_list.*
 import xyz.mcomella.noncontactcallblocker.R
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import xyz.mcomella.noncontactcallblocker.ext.viewModelFactory
 import java.text.DateFormat
 
 /** The screen that lists blocked calls. */
@@ -55,7 +56,7 @@ class CallBlockListFragment : Fragment() {
             adapter = blockListAdapter
         }
 
-        val callBlockListViewModel = ViewModelProviders.of(this)[CallBlockListViewModel::class.java]
+        val callBlockListViewModel = viewModelFactory[CallBlockListViewModel::class.java]
         callBlockListViewModel.blockedCalls.observe(this, Observer { blockedCalls ->
             blockListAdapter.submitList(blockedCalls)
         })
