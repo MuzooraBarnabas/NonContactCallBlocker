@@ -18,8 +18,10 @@
 
 package xyz.mcomella.noncontactcallblocker.integration
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
@@ -27,6 +29,8 @@ import xyz.mcomella.noncontactcallblocker.ext.testValue
 import java.util.*
 
 class BlockedCallDaoTest : AppDBTest() {
+
+    @get:Rule val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var dao: BlockedCallDao
 
