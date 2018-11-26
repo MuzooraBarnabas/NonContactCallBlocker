@@ -18,10 +18,10 @@
 
 package xyz.mcomella.noncontactcallblocker.ext
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
 import xyz.mcomella.noncontactcallblocker.ViewModelFactory
 
-val Fragment.viewModelFactory: ViewModelProvider
+val androidx.fragment.app.Fragment.viewModelFactory: ViewModelProvider
         get() = ViewModelProviders.of(this, ViewModelFactory(context!!.toApp()))

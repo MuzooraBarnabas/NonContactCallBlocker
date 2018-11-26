@@ -21,7 +21,7 @@ package xyz.mcomella.noncontactcallblocker.rights
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_rights.*
 import xyz.mcomella.noncontactcallblocker.R
 

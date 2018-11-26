@@ -20,10 +20,10 @@ package xyz.mcomella.noncontactcallblocker
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private class MainPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+private class MainPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
     override fun getItem(position: Int) = when (position) {
         0 -> ConfigurationFragment.newInstance()
         1 -> CallBlockListFragment.newInstance()

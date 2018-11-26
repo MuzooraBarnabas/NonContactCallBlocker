@@ -20,8 +20,8 @@ package xyz.mcomella.noncontactcallblocker.config
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v14.preference.SwitchPreference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
+import androidx.preference.PreferenceFragmentCompat
 import xyz.mcomella.noncontactcallblocker.R
 import xyz.mcomella.noncontactcallblocker.ext.toApp
 

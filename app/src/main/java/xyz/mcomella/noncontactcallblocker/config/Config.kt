@@ -21,7 +21,7 @@ package xyz.mcomella.noncontactcallblocker.config
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import xyz.mcomella.noncontactcallblocker.R
 
 private const val KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE = "isInitialPermissionsRequestComplete"

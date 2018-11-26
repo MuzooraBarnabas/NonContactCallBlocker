@@ -18,14 +18,14 @@
 
 package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.res.Resources
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +36,7 @@ import xyz.mcomella.noncontactcallblocker.R
 import xyz.mcomella.noncontactcallblocker.ext.viewModelFactory
 
 /** The screen that lists blocked calls. */
-class CallBlockListFragment : Fragment() {
+class CallBlockListFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_call_block_list, container, false)
@@ -48,7 +48,7 @@ class CallBlockListFragment : Fragment() {
 
         val blockListAdapter = CallBlockListAdapter(context.resources)
         callBlockList.apply {
-            layoutManager = LinearLayoutManager(context, VERTICAL, false)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, VERTICAL, false)
             adapter = blockListAdapter
         }
 
@@ -91,7 +91,7 @@ private class CallBlockListAdapter(
     }
 }
 
-private class CallBlockListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+private class CallBlockListViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     val numberView: TextView = itemView.findViewById(R.id.number)
     val dateView: TextView = itemView.findViewById(R.id.date)
 }

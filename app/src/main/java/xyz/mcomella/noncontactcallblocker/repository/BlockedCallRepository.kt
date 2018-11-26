@@ -18,8 +18,8 @@
 
 package xyz.mcomella.noncontactcallblocker.repository
 
-import android.arch.lifecycle.LiveData
-import android.support.annotation.AnyThread
+import androidx.lifecycle.LiveData
+import androidx.annotation.AnyThread
 import kotlinx.coroutines.experimental.launch
 import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao

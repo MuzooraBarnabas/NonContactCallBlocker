@@ -18,7 +18,7 @@
 
 package xyz.mcomella.noncontactcallblocker.repository
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Before

@@ -18,8 +18,8 @@
 
 package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.MutableLiveData
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule

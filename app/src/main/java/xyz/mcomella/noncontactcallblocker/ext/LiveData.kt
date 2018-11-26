@@ -18,10 +18,10 @@
 
 package xyz.mcomella.noncontactcallblocker.ext
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
-import android.support.annotation.VisibleForTesting
-import android.support.annotation.VisibleForTesting.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.*
 import com.android.example.github.util.LiveDataTestUtil
 
 fun <T, R> LiveData<T>.map(mapFun: (v: T) -> R): LiveData<R> {

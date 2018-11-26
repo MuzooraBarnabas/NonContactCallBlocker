@@ -18,8 +18,8 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListViewModel
 
 /**
