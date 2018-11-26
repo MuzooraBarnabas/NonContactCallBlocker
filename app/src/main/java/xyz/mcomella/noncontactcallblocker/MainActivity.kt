@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private class MainPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
+private class MainPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int) = when (position) {
         0 -> ConfigurationFragment.newInstance()
         1 -> CallBlockListFragment.newInstance()

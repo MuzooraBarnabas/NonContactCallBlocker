@@ -25,18 +25,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import kotlinx.android.synthetic.main.fragment_call_block_list.*
 import xyz.mcomella.noncontactcallblocker.R
 import xyz.mcomella.noncontactcallblocker.ext.viewModelFactory
 
 /** The screen that lists blocked calls. */
-class CallBlockListFragment : androidx.fragment.app.Fragment() {
+class CallBlockListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_call_block_list, container, false)
@@ -48,7 +47,7 @@ class CallBlockListFragment : androidx.fragment.app.Fragment() {
 
         val blockListAdapter = CallBlockListAdapter(context.resources)
         callBlockList.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, VERTICAL, false)
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
             adapter = blockListAdapter
         }
 
