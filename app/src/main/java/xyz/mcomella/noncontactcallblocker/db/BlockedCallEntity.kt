@@ -20,7 +20,12 @@ package xyz.mcomella.noncontactcallblocker.db
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.telephony.PhoneNumberUtils
+import xyz.mcomella.noncontactcallblocker.ui.blocklist.BlockedCall
+import java.text.DateFormat
 import java.util.Date
+
+private val defaultDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
 
 /** Table for blocked calls. */
 @Entity(tableName = "blocked_calls")
@@ -29,4 +34,12 @@ data class BlockedCallEntity(
         val date: Date
 ) {
     @PrimaryKey(autoGenerate = true) var id: Long = 0
+
+    fun toBlockedCall(
+            dateFormat: DateFormat = defaultDateFormat
+    ): BlockedCall {
+        val outNumber = number?.let { PhoneNumberUtils.formatNumber(it, "US") } // todo: country?
+        val outDate = dateFormat.format(date)
+        return BlockedCall(outNumber, outDate)
+    }
 }

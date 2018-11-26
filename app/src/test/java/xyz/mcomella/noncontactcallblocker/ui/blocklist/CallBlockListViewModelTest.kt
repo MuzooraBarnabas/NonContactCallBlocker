@@ -20,46 +20,69 @@ package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.robolectric.RobolectricTestRunner
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
+import xyz.mcomella.noncontactcallblocker.ext.testValue
 import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
 import java.util.*
+import java.util.concurrent.TimeUnit
 
+@RunWith(RobolectricTestRunner::class)
 class CallBlockListViewModelTest {
 
     @get:Rule
     var rule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: CallBlockListViewModel
-    private lateinit var blockedCalls: MutableLiveData<List<BlockedCallEntity>>
+    private lateinit var repoBlockedCalls: MutableLiveData<List<BlockedCallEntity>>
 
     @Before
     fun setUp() {
-        blockedCalls = MutableLiveData()
+        repoBlockedCalls = MutableLiveData()
         val repository = mock(BlockedCallRepository::class.java).also {
-            `when`(it.getBlockedCalls()).thenReturn(blockedCalls)
+            `when`(it.getBlockedCalls()).thenReturn(repoBlockedCalls)
         }
         viewModel = CallBlockListViewModel(repository)
     }
 
     @Test
     fun `WHEN an empty list is received THEN an empty list is returned`() {
-        blockedCalls.postValue(listOf())
-        assertEquals(emptyList<List<BlockedCallEntity>>(), viewModel.blockedCalls.value)
+        repoBlockedCalls.postValue(listOf())
+        assertEquals(emptyList<List<BlockedCallEntity>>(), viewModel.blockedCalls.testValue)
     }
 
     @Test
-    fun `WHEN a list of items is received THEN it is returned`() {
-        val expected = listOf(
-                BlockedCallEntity("5555555555", Date()),
-                BlockedCallEntity("5556666666", Date(1234567))
+    fun `WHEN a list of entities are received THEN they are converted to UI objects and returned`() {
+        val calendar = GregorianCalendar(TimeZone.getTimeZone("UTC")).apply {
+            clear()
+            set(2018, 8, 4, 10, 37) // month is 0-index.
+        }
+
+        val input = listOf(
+                BlockedCallEntity("5555555555", calendar.time),
+                BlockedCallEntity(null, Date(calendar.timeInMillis + TimeUnit.HOURS.toMillis(12)))
         )
-        blockedCalls.postValue(expected.toList()) // copy to ensure reference equality isn't used.
-        assertEquals(expected, blockedCalls.value)
+
+        repoBlockedCalls.postValue(input)
+        val actual = viewModel.blockedCalls.testValue
+        assertEquals(2, actual.size)
+
+        // Entity conversion is tested elsewhere so we just sanity check this.
+        val firstActual = actual.first()
+        assertNotNull(firstActual.number)
+
+        val message = "actual: $firstActual"
+        assertTrue(message, firstActual.number!!.contains("555"))
+        assertTrue(message, firstActual.date.contains("18")) // year: (20)18
+        assertTrue(message, firstActual.date.contains("37")) // minutes of day
+
+        assertNull(actual[1].number)
     }
 }

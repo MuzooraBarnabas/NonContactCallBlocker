@@ -18,13 +18,13 @@
 
 package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
-import xyz.mcomella.noncontactcallblocker.ext.map
-import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
-
-class CallBlockListViewModel(blockedCallRepository: BlockedCallRepository) : ViewModel() {
-    val blockedCalls: LiveData<List<BlockedCall>> = blockedCallRepository.getBlockedCalls().map { entities ->
-        entities.map { it.toBlockedCall() }
-    }
-}
+/**
+ * A blocked call's user-facing appearance, already formatted to the current locale and time zone.
+ *
+ * @param number formatted number for the blocked call or null if the number is unknown.
+ */
+data class BlockedCall(
+        // A sealed class would be better but it's not supported by data classes
+        val number: String?,
+        val date: String
+)
