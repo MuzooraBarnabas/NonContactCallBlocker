@@ -23,12 +23,14 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.PRIVATE
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import kotlinx.android.synthetic.main.fragment_call_block_list.*
 import xyz.mcomella.noncontactcallblocker.R
@@ -64,7 +66,7 @@ class CallBlockListFragment : Fragment() {
 
 private class CallBlockListAdapter(
         res: Resources
-) : ListAdapter<BlockedCall, CallBlockListViewHolder>(DiffCallback()) {
+) : ListAdapter<BlockedCall, CallBlockListViewHolder>(BlockedCallDiffCallback()) {
 
     private val unknownNumberString = res.getString(R.string.block_list_unknown_number)
 
@@ -78,19 +80,9 @@ private class CallBlockListAdapter(
         numberView.text = blockedCall.number ?: unknownNumberString
         dateView.text = blockedCall.date
     }
-
-    private class DiffCallback : DiffUtil.ItemCallback<BlockedCall>() {
-        override fun areItemsTheSame(oldItem: BlockedCall, newItem: BlockedCall): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: BlockedCall, newItem: BlockedCall): Boolean {
-            return oldItem == newItem
-        }
-    }
 }
 
-private class CallBlockListViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+private class CallBlockListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val numberView: TextView = itemView.findViewById(R.id.number)
     val dateView: TextView = itemView.findViewById(R.id.date)
 }

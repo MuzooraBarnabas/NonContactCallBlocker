@@ -18,6 +18,8 @@
 
 package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
+import androidx.recyclerview.widget.DiffUtil
+
 /**
  * A blocked call's user-facing appearance, already formatted to the current locale and time zone.
  *
@@ -28,3 +30,16 @@ data class BlockedCall(
         val number: String?,
         val date: String
 )
+
+class BlockedCallDiffCallback : DiffUtil.ItemCallback<BlockedCall>() {
+    override fun areItemsTheSame(oldItem: BlockedCall, newItem: BlockedCall): Boolean {
+        // The DB can return different references to the same item: this method is used as a shallow
+        // comparison by the list before calling areContentsTheSame. Since we have no shallow
+        // comparison (e.g. id), we just compare the items.
+        return oldItem == newItem
+    }
+
+    override fun areContentsTheSame(oldItem: BlockedCall, newItem: BlockedCall): Boolean {
+        return oldItem == newItem
+    }
+}
