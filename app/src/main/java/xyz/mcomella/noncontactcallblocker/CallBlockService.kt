@@ -22,8 +22,6 @@ import android.net.Uri
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.TelecomManager
-import kotlinx.coroutines.experimental.launch
-import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
 import xyz.mcomella.noncontactcallblocker.ext.toApp
 import java.util.*
 

@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.DiffUtil
  */
 data class BlockedCall(
         // A sealed class would be better but it's not supported by data classes
-        val number: String?,
-        val date: String
+    val number: String?,
+    val date: String
 )
 
 class BlockedCallDiffCallback : DiffUtil.ItemCallback<BlockedCall>() {

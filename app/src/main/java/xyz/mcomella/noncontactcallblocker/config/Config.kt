@@ -27,8 +27,8 @@ import xyz.mcomella.noncontactcallblocker.R
 private const val KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE = "isInitialPermissionsRequestComplete"
 
 class Config private constructor(
-        val sharedPrefs: SharedPreferences,
-        private val res: Resources
+    val sharedPrefs: SharedPreferences,
+    private val res: Resources
 ) {
 
     // The Preference class automatically adds values to shared prefs so we can't just use contain on keyIsBlockingEnabled.

@@ -30,13 +30,13 @@ private val defaultDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
 /** Table for blocked calls. */
 @Entity(tableName = "blocked_calls")
 data class BlockedCallEntity(
-        val number: String?,
-        val date: Date
+    val number: String?,
+    val date: Date
 ) {
     @PrimaryKey(autoGenerate = true) var id: Long = 0
 
     fun toBlockedCall(
-            dateFormat: DateFormat = defaultDateFormat
+        dateFormat: DateFormat = defaultDateFormat
     ): BlockedCall {
         val outNumber = number?.let { PhoneNumberUtils.formatNumber(it, "US") } // todo: country?
         val outDate = dateFormat.format(date)

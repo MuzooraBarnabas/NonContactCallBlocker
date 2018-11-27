@@ -24,7 +24,6 @@ import kotlinx.coroutines.experimental.launch
 private const val REQUEST_CODE_CONTACTS = 3636
 private const val REQUEST_CODE_DEFAULT_DIALER = REQUEST_CODE_CONTACTS + 1
 
-
 typealias OnPermissionsGranted = () -> Unit
 
 /**
@@ -38,9 +37,9 @@ typealias OnPermissionsGranted = () -> Unit
 object Permissions {
 
     data class PermissionsContext(
-            internal val activity: Activity,
-            internal var activeDeferred: CompletableDeferred<Unit>? = null,
-            internal var activeDialog: AlertDialog? = null
+        internal val activity: Activity,
+        internal var activeDeferred: CompletableDeferred<Unit>? = null,
+        internal var activeDialog: AlertDialog? = null
     )
 
     /**
@@ -50,8 +49,12 @@ object Permissions {
      *
      * @return a [PermissionsContext] object that should be passed into all Activity callbacks.
      */
-    fun maybePromptForRequired(existingPermissionsContext: PermissionsContext?, activity: Activity,
-                               uiCancelJob: Job, onSuccess: OnPermissionsGranted): PermissionsContext {
+    fun maybePromptForRequired(
+        existingPermissionsContext: PermissionsContext?,
+        activity: Activity,
+        uiCancelJob: Job,
+        onSuccess: OnPermissionsGranted
+    ): PermissionsContext {
         if (existingPermissionsContext?.activeDeferred != null) { // Already active request.
             return existingPermissionsContext
         }
@@ -98,8 +101,12 @@ object Permissions {
     }
 
     /** Handles a permissions request result. */
-    fun onRequestPermissionsResult(maybePermissionsContext: PermissionsContext?, requestCode: Int,
-                                   permissions: Array<out String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        maybePermissionsContext: PermissionsContext?,
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode != REQUEST_CODE_CONTACTS) {
             throw IllegalArgumentException("Unexpected permissions requested: $permissions")
         }
@@ -146,7 +153,7 @@ object Permissions {
             .setTitle(R.string.dialog_permissions_contacts_title)
             .setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(R.string.dialog_permissions_okay) { _, _  ->
+            .setPositiveButton(R.string.dialog_permissions_okay) { _, _ ->
                 requestContacts(activity)
             }
             .create()
@@ -167,7 +174,7 @@ object Permissions {
             .setTitle(R.string.dialog_permissions_dialer_title)
             .setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(R.string.dialog_permissions_okay) { _, _  ->
+            .setPositiveButton(R.string.dialog_permissions_okay) { _, _ ->
                 requestDefaultDialer(activity)
             }
             .create()
@@ -178,7 +185,7 @@ object Permissions {
         activity.startActivityForResult(intent, REQUEST_CODE_DEFAULT_DIALER)
     }
 
-    private fun complete(permissionsContext: PermissionsContext) = with (permissionsContext) {
+    private fun complete(permissionsContext: PermissionsContext) = with(permissionsContext) {
         activeDeferred!!.complete(Unit)
         activeDeferred = null
         activeDialog = null

@@ -27,7 +27,7 @@ import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import java.util.*
 
 class BlockedCallRepository(
-        private val blockedCallDao: BlockedCallDao
+    private val blockedCallDao: BlockedCallDao
 ) {
 
     fun getBlockedCalls(): LiveData<List<BlockedCallEntity>> {

@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.Job
 import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListFragment
-import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
 import xyz.mcomella.noncontactcallblocker.ext.toApp
 import xyz.mcomella.noncontactcallblocker.rights.SoftwareRightsActivity

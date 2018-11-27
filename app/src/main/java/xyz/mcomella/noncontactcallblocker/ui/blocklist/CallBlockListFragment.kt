@@ -28,8 +28,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.VisibleForTesting
-import androidx.annotation.VisibleForTesting.PRIVATE
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import kotlinx.android.synthetic.main.fragment_call_block_list.*
@@ -65,7 +63,7 @@ class CallBlockListFragment : Fragment() {
 }
 
 private class CallBlockListAdapter(
-        res: Resources
+    res: Resources
 ) : ListAdapter<BlockedCall, CallBlockListViewHolder>(BlockedCallDiffCallback()) {
 
     private val unknownNumberString = res.getString(R.string.block_list_unknown_number)
@@ -75,7 +73,7 @@ private class CallBlockListAdapter(
         return CallBlockListViewHolder(inflater.inflate(R.layout.block_list_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: CallBlockListViewHolder, position: Int) = with (holder) {
+    override fun onBindViewHolder(holder: CallBlockListViewHolder, position: Int) = with(holder) {
         val blockedCall = getItem(position)
         numberView.text = blockedCall.number ?: unknownNumberString
         dateView.text = blockedCall.date
