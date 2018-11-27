@@ -23,6 +23,7 @@ import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.TelecomManager
 import xyz.mcomella.noncontactcallblocker.ext.serviceLocator
+import xyz.mcomella.noncontactcallblocker.repository.ContactsRepository
 import java.util.Date
 
 /** The call blocking logic in the app. */
@@ -33,7 +34,7 @@ class CallBlockService : CallScreeningService() {
         val isCallBlocked = when {
             !serviceLocator.config.isBlockingEnabled -> false
             number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
-            else -> !Contacts.isNumberInContacts(contentResolver, number)
+            else -> !serviceLocator.contactsRepository.isNumberInContacts(number)
         }
 
         respondToCall(callDetails, getCallResponse(isCallBlocked))

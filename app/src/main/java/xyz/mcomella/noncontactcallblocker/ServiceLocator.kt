@@ -21,6 +21,7 @@ package xyz.mcomella.noncontactcallblocker
 import xyz.mcomella.noncontactcallblocker.config.Config
 import xyz.mcomella.noncontactcallblocker.db.AppDB
 import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
+import xyz.mcomella.noncontactcallblocker.repository.ContactsRepository
 
 /**
  * Encapsulates all the dependencies of the app: see also the service locator pattern.
@@ -31,6 +32,7 @@ class ServiceLocator(app: CallBlockApplication) {
     // not initialized (e.g. when blocking a call in the background).
     private val db by lazy { AppDB.create(app) }
     val blockedCallRepository by lazy { BlockedCallRepository(db.blockedCallDao()) }
+    val contactsRepository by lazy { ContactsRepository(app.contentResolver) }
 
     val config by lazy { Config.create(app) }
 }

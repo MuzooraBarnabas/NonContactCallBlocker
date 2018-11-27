@@ -16,19 +16,24 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker
+package xyz.mcomella.noncontactcallblocker.repository
 
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.ContactsContract
 
-object Contacts {
+/**
+ * A data store representing the user's contacts.
+ */
+class ContactsRepository(
+    private val contentResolver: ContentResolver
+) {
 
-    fun isNumberInContacts(contentResolver: ContentResolver, number: Uri): Boolean {
+    fun isNumberInContacts(number: Uri): Boolean {
         val queryUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, number.toString())
-        return contentResolver.query(queryUri, emptyArray(), // Empty means
-                null, null, null).use {
+        return contentResolver.query(queryUri, emptyArray(), // Empty means all columns.
+                null, null, null)?.use {
             it.count > 0
-        }
+        } ?: false
     }
 }
