@@ -20,5 +20,9 @@ package xyz.mcomella.noncontactcallblocker.ext
 
 import android.content.Context
 import xyz.mcomella.noncontactcallblocker.CallBlockApplication
+import xyz.mcomella.noncontactcallblocker.ServiceLocator
 
 fun Context.toApp(): CallBlockApplication = (this.applicationContext as CallBlockApplication)
+
+val Context.serviceLocator: ServiceLocator
+    get() = toApp().serviceLocator

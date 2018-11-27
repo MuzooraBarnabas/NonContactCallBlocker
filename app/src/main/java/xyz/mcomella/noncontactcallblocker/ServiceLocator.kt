@@ -18,30 +18,19 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.app.Application
-import android.os.StrictMode
+import xyz.mcomella.noncontactcallblocker.config.Config
+import xyz.mcomella.noncontactcallblocker.db.AppDB
+import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
 
-open class CallBlockApplication : Application() {
+/**
+ * Encapsulates all the dependencies of the app: see also the service locator pattern.
+ */
+class ServiceLocator(app: CallBlockApplication) {
 
-    // Context is not complete until constructor returns so lazy.
-    val serviceLocator by lazy { ServiceLocator(this) }
+    // We lazy load everything to minimize performance impact when the whole app is
+    // not initialized (e.g. when blocking a call in the background).
+    private val db by lazy { AppDB.create(app) }
+    val blockedCallRepository by lazy { BlockedCallRepository(db.blockedCallDao()) }
 
-    override fun onCreate() {
-        initStrictMode()
-        super.onCreate()
-    }
-
-    private fun initStrictMode() {
-        StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyDeath()
-                .build()
-                .let { StrictMode.setThreadPolicy(it) }
-
-        StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyDeath()
-                .build()
-                .let { StrictMode.setVmPolicy(it) }
-    }
+    val config by lazy { Config.create(app) }
 }

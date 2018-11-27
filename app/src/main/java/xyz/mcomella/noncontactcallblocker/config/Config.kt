@@ -21,8 +21,10 @@ package xyz.mcomella.noncontactcallblocker.config
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.os.StrictMode
 import androidx.preference.PreferenceManager
 import xyz.mcomella.noncontactcallblocker.R
+import xyz.mcomella.noncontactcallblocker.ext.resetAfter
 
 private const val KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE = "isInitialPermissionsRequestComplete"
 
@@ -43,7 +45,10 @@ class Config private constructor(
 
     companion object {
         fun create(context: Context): Config {
-            return Config(PreferenceManager.getDefaultSharedPreferences(context), context.resources)
+            // Shared prefs causes a disk read.
+            return StrictMode.allowThreadDiskReads().resetAfter {
+                Config(PreferenceManager.getDefaultSharedPreferences(context), context.resources)
+            }
         }
     }
 }

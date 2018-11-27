@@ -24,4 +24,4 @@ import androidx.fragment.app.Fragment
 import xyz.mcomella.noncontactcallblocker.ViewModelFactory
 
 val androidx.fragment.app.Fragment.viewModelFactory: ViewModelProvider
-        get() = ViewModelProviders.of(this, ViewModelFactory(context!!.toApp()))
+        get() = ViewModelProviders.of(this, ViewModelFactory(context!!.serviceLocator))

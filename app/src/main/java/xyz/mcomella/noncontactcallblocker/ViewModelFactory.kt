@@ -25,12 +25,12 @@ import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListViewModel
 /**
  * A factory for view models created in the call block app.
  */
-class ViewModelFactory(private val app: CallBlockApplication) : ViewModelProvider.Factory {
+class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST") // Required for types
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when (modelClass) {
-            CallBlockListViewModel::class.java -> CallBlockListViewModel(app.blockedCallRepository)
+            CallBlockListViewModel::class.java -> CallBlockListViewModel(serviceLocator.blockedCallRepository)
             else -> throw IllegalArgumentException("Unknown view model class $modelClass")
         } as T
     }

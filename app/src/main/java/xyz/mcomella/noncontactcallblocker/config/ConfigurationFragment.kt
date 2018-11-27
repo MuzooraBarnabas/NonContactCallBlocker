@@ -20,10 +20,10 @@ package xyz.mcomella.noncontactcallblocker.config
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.preference.SwitchPreference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import xyz.mcomella.noncontactcallblocker.R
-import xyz.mcomella.noncontactcallblocker.ext.toApp
+import xyz.mcomella.noncontactcallblocker.ext.serviceLocator
 
 /** A screen that lets the user configure critical values like if the app is enabled. */
 class ConfigurationFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -33,7 +33,7 @@ class ConfigurationFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.prefs_configuration, rootKey)
         globalEnablePreference = findPreference(context!!.getString(R.string.key_global_enable)) as SwitchPreference
-        context!!.toApp().config.sharedPrefs.registerOnSharedPreferenceChangeListener(this)
+        context!!.serviceLocator.config.sharedPrefs.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPrefs: SharedPreferences, changedKey: String) {

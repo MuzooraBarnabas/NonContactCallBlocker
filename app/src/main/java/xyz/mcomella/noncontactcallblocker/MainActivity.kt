@@ -20,19 +20,19 @@ package xyz.mcomella.noncontactcallblocker
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.Job
-import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListFragment
 import xyz.mcomella.noncontactcallblocker.config.ConfigurationFragment
-import xyz.mcomella.noncontactcallblocker.ext.toApp
+import xyz.mcomella.noncontactcallblocker.ext.serviceLocator
 import xyz.mcomella.noncontactcallblocker.rights.SoftwareRightsActivity
+import xyz.mcomella.noncontactcallblocker.ui.blocklist.CallBlockListFragment
 
 const val LOGTAG = "NonContactCallBlocker" // max len 23.
 
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private fun onPermissionsGranted() {
         permissionsRequestContext = null
 
-        val config = this.toApp().config
+        val config = serviceLocator.config
         if (!config.isInitialPermissionsRequestComplete) {
             config.isInitialPermissionsRequestComplete = true
             config.isBlockingEnabled = true // Will animate to visualize to users that blocking is now enabled.
