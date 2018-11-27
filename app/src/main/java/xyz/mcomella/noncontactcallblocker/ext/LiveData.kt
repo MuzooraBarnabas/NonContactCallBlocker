@@ -21,7 +21,7 @@ package xyz.mcomella.noncontactcallblocker.ext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.VisibleForTesting.*
+import androidx.annotation.VisibleForTesting.NONE
 import com.android.example.github.util.LiveDataTestUtil
 
 fun <T, R> LiveData<T>.map(mapFun: (v: T) -> R): LiveData<R> {

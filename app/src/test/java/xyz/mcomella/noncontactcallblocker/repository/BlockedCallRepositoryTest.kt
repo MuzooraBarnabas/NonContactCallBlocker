@@ -20,13 +20,16 @@ package xyz.mcomella.noncontactcallblocker.repository
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
-import java.util.*
+import java.util.Date
 
 class BlockedCallRepositoryTest {
 

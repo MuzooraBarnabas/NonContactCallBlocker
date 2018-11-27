@@ -23,7 +23,7 @@ import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.TelecomManager
 import xyz.mcomella.noncontactcallblocker.ext.toApp
-import java.util.*
+import java.util.Date
 
 /** The call blocking logic in the app. */
 class CallBlockService : CallScreeningService() {

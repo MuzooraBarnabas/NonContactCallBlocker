@@ -25,7 +25,10 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.text.DateFormat
 import java.text.DateFormat.SHORT
-import java.util.*
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
+import java.util.TimeZone
 
 private val UTC = TimeZone.getTimeZone("UTC")
 

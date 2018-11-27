@@ -20,7 +20,10 @@ package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +34,9 @@ import org.robolectric.RobolectricTestRunner
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import xyz.mcomella.noncontactcallblocker.ext.testValue
 import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
-import java.util.*
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)

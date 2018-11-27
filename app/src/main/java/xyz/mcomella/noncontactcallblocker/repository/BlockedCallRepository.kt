@@ -24,7 +24,7 @@ import kotlinx.coroutines.experimental.launch
 import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
-import java.util.*
+import java.util.Date
 
 class BlockedCallRepository(
     private val blockedCallDao: BlockedCallDao

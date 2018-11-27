@@ -4,16 +4,16 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.Manifest.permission.*
+import android.Manifest.permission.READ_CONTACTS
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager.*
 import androidx.annotation.CheckResult
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 import android.telecom.TelecomManager
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import kotlinx.coroutines.experimental.CompletableDeferred
 import kotlinx.coroutines.experimental.CoroutineStart
 import kotlinx.coroutines.experimental.Deferred

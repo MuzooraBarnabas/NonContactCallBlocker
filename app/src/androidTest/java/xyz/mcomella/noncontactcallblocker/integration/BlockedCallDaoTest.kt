@@ -26,7 +26,7 @@ import org.junit.Test
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import xyz.mcomella.noncontactcallblocker.ext.testValue
-import java.util.*
+import java.util.Date
 
 class BlockedCallDaoTest : AppDBTest() {
 
