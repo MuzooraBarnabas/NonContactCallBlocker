@@ -8,8 +8,6 @@ import android.Manifest.permission.READ_CONTACTS
 import android.app.Activity
 import android.app.role.RoleManager
 import android.content.Context
-import android.content.Intent
-import android.telecom.TelecomManager
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat

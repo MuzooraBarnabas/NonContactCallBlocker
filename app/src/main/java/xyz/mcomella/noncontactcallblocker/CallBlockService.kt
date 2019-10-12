@@ -37,7 +37,6 @@ class CallBlockService : CallScreeningService() {
                 !serviceLocator.config.isBlockingEnabled -> false
                 number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
                 else -> !serviceLocator.contactsRepository.isNumberInContacts(number)
-
             }
         }
 
