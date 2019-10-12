@@ -18,17 +18,21 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.content.ContentResolver
-import android.net.Uri
-import android.provider.ContactsContract
+import xyz.mcomella.noncontactcallblocker.config.Config
+import xyz.mcomella.noncontactcallblocker.db.AppDB
+import xyz.mcomella.noncontactcallblocker.repository.BlockedCallRepository
+import xyz.mcomella.noncontactcallblocker.repository.ContactsRepository
 
-object Contacts {
+/**
+ * Encapsulates all the dependencies of the app: see also the service locator pattern.
+ */
+class ServiceLocator(app: CallBlockApplication) {
 
-    fun isNumberInContacts(contentResolver: ContentResolver, number: Uri): Boolean {
-        val queryUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, number.toString())
-        return contentResolver.query(queryUri, emptyArray(), // Empty means
-                null, null, null).use {
-            it.count > 0
-        }
-    }
+    // We lazy load everything to minimize performance impact when the whole app is
+    // not initialized (e.g. when blocking a call in the background).
+    private val db by lazy { AppDB.create(app) }
+    val blockedCallRepository by lazy { BlockedCallRepository(db.blockedCallDao()) }
+    val contactsRepository by lazy { ContactsRepository(app.contentResolver) }
+
+    val config by lazy { Config.create(app) }
 }

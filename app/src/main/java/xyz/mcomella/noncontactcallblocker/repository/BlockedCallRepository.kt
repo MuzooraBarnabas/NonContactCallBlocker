@@ -16,17 +16,29 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.blocklist
+package xyz.mcomella.noncontactcallblocker.repository
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.lifecycle.LiveData
+import androidx.annotation.AnyThread
+import kotlinx.coroutines.experimental.launch
+import xyz.mcomella.noncontactcallblocker.db.AppDB.Companion.dbDispatcher
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
+import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import java.util.Date
 
-/** Table for blocked calls. */
-@Entity(tableName = "blocked_calls")
-data class BlockedCallEntity(
-        val number: String?,
-        val date: Date
+class BlockedCallRepository(
+    private val blockedCallDao: BlockedCallDao
 ) {
-    @PrimaryKey(autoGenerate = true) var id: Long = 0
+
+    fun getBlockedCalls(): LiveData<List<BlockedCallEntity>> {
+        return blockedCallDao.loadBlockedCalls()
+    }
+
+    @AnyThread
+    fun onCallBlocked(number: String?, date: Date) {
+        val entity = BlockedCallEntity(number, date)
+        launch(dbDispatcher) {
+            blockedCallDao.insertBlockedCalls(entity)
+        }
+    }
 }

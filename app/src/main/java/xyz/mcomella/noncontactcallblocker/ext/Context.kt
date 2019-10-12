@@ -16,19 +16,13 @@
  *  along with NonContactCallBlocker.  If not, see
  *  <https://www.gnu.org/licenses/>. */
 
-package xyz.mcomella.noncontactcallblocker.blocklist
+package xyz.mcomella.noncontactcallblocker.ext
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.content.Context
+import xyz.mcomella.noncontactcallblocker.CallBlockApplication
+import xyz.mcomella.noncontactcallblocker.ServiceLocator
 
-/** Accessor for block list. */
-@Dao
-interface BlockedCallDao {
-    @Insert
-    fun insertBlockedCalls(vararg blockedCalls: BlockedCallEntity)
+fun Context.toApp(): CallBlockApplication = (this.applicationContext as CallBlockApplication)
 
-    @Query("SELECT * FROM blocked_calls ORDER BY date DESC")
-    fun loadBlockedCalls(): LiveData<List<BlockedCallEntity>>
-}
+val Context.serviceLocator: ServiceLocator
+    get() = toApp().serviceLocator

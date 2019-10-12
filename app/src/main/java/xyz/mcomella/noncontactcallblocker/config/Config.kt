@@ -21,14 +21,16 @@ package xyz.mcomella.noncontactcallblocker.config
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.support.v7.preference.PreferenceManager
+import android.os.StrictMode
+import androidx.preference.PreferenceManager
 import xyz.mcomella.noncontactcallblocker.R
+import xyz.mcomella.noncontactcallblocker.ext.resetAfter
 
 private const val KEY_IS_INITIAL_PERMISSIONS_REQUEST_COMPLETE = "isInitialPermissionsRequestComplete"
 
 class Config private constructor(
-        val sharedPrefs: SharedPreferences,
-        private val res: Resources
+    val sharedPrefs: SharedPreferences,
+    private val res: Resources
 ) {
 
     // The Preference class automatically adds values to shared prefs so we can't just use contain on keyIsBlockingEnabled.
@@ -42,11 +44,11 @@ class Config private constructor(
         set(value) = sharedPrefs.edit().putBoolean(keyIsBlockingEnabled, value).apply()
 
     companion object {
-        private lateinit var singleton: Config
-        fun get() = singleton
-
-        fun init(context: Context) {
-            singleton = Config(PreferenceManager.getDefaultSharedPreferences(context), context.resources)
+        fun create(context: Context): Config {
+            // Shared prefs causes a disk read.
+            return StrictMode.allowThreadDiskReads().resetAfter {
+                Config(PreferenceManager.getDefaultSharedPreferences(context), context.resources)
+            }
         }
     }
 }

@@ -4,26 +4,29 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.Manifest.permission.*
+import android.Manifest.permission.READ_CONTACTS
 import android.app.Activity
+import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager.*
-import android.support.annotation.CheckResult
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.telecom.TelecomManager
+import androidx.annotation.CheckResult
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.core.content.getSystemService
 import kotlinx.coroutines.experimental.CompletableDeferred
 import kotlinx.coroutines.experimental.CoroutineStart
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import xyz.mcomella.noncontactcallblocker.Permissions.onActivityResult
+import xyz.mcomella.noncontactcallblocker.Permissions.onRequestPermissionsResult
 
 private const val REQUEST_CODE_CONTACTS = 3636
-private const val REQUEST_CODE_DEFAULT_DIALER = REQUEST_CODE_CONTACTS + 1
-
+private const val REQUEST_CODE_CALL_SCREENING = REQUEST_CODE_CONTACTS + 1
 
 typealias OnPermissionsGranted = () -> Unit
 
@@ -38,9 +41,9 @@ typealias OnPermissionsGranted = () -> Unit
 object Permissions {
 
     data class PermissionsContext(
-            internal val activity: Activity,
-            internal var activeDeferred: CompletableDeferred<Unit>? = null,
-            internal var activeDialog: AlertDialog? = null
+        internal val activity: Activity,
+        internal var activeDeferred: CompletableDeferred<Unit>? = null,
+        internal var activeDialog: AlertDialog? = null
     )
 
     /**
@@ -50,8 +53,12 @@ object Permissions {
      *
      * @return a [PermissionsContext] object that should be passed into all Activity callbacks.
      */
-    fun maybePromptForRequired(existingPermissionsContext: PermissionsContext?, activity: Activity,
-                               uiCancelJob: Job, onSuccess: OnPermissionsGranted): PermissionsContext {
+    fun maybePromptForRequired(
+        existingPermissionsContext: PermissionsContext?,
+        activity: Activity,
+        uiCancelJob: Job,
+        onSuccess: OnPermissionsGranted
+    ): PermissionsContext {
         if (existingPermissionsContext?.activeDeferred != null) { // Already active request.
             return existingPermissionsContext
         }
@@ -59,7 +66,7 @@ object Permissions {
         val permissionsContext = PermissionsContext(activity)
         launch(UI + uiCancelJob, CoroutineStart.UNDISPATCHED) {
             maybePromptContacts(permissionsContext).await()
-            maybePromptDefaultDialer(permissionsContext).await()
+            maybePromptCallScreeningService(permissionsContext).await()
             onSuccess()
         }
 
@@ -81,25 +88,22 @@ object Permissions {
         return deferred
     }
 
-    private fun maybePromptDefaultDialer(permissionsContext: PermissionsContext): Deferred<Unit> {
+    private fun maybePromptCallScreeningService(permissionsContext: PermissionsContext): Deferred<Unit> {
         val deferred = CompletableDeferred<Unit>()
         permissionsContext.activeDeferred = deferred
 
-        val activity = permissionsContext.activity
-        val telecomManager = permissionsContext.activity.getSystemService(TelecomManager::class.java)
-        if (telecomManager.defaultDialerPackage == activity.packageName) {
-            complete(permissionsContext)
-        } else {
-            val message = getPromptDefaultDialerDialogMessage(activity, isDenied = false)
-            getPromptDefaultDialerDialog(activity, message).show()
-        }
+        requestCallScreen(permissionsContext.activity)
 
         return deferred
     }
 
     /** Handles a permissions request result. */
-    fun onRequestPermissionsResult(maybePermissionsContext: PermissionsContext?, requestCode: Int,
-                                   permissions: Array<out String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        maybePermissionsContext: PermissionsContext?,
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode != REQUEST_CODE_CONTACTS) {
             throw IllegalArgumentException("Unexpected permissions requested: $permissions")
         }
@@ -116,7 +120,7 @@ object Permissions {
 
     /** Handle an activity result for permissions. */
     fun onActivityResult(maybePermissionsContext: PermissionsContext?, requestCode: Int, resultCode: Int) {
-        if (requestCode != REQUEST_CODE_DEFAULT_DIALER) { return } // Someone else's activity.
+        if (requestCode != REQUEST_CODE_CALL_SCREENING) { return }
 
         val permissionsContext = maybePermissionsContext!! // Should be non-null for our requests.
         when (resultCode) {
@@ -124,11 +128,10 @@ object Permissions {
 
             Activity.RESULT_CANCELED -> {
                 val activity = permissionsContext.activity
-                val message = getPromptDefaultDialerDialogMessage(activity, isDenied = true)
-                getPromptDefaultDialerDialog(activity, message).show()
+                val message = getPromptCallScreenDialogMessage(activity)
+                getPromptCallScreenDialog(activity, message).show()
             }
 
-            // Crash so we know about it.
             else -> throw IllegalArgumentException("Unknown result code: $resultCode")
         }
     }
@@ -146,7 +149,7 @@ object Permissions {
             .setTitle(R.string.dialog_permissions_contacts_title)
             .setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(R.string.dialog_permissions_okay) { _, _  ->
+            .setPositiveButton(R.string.dialog_permissions_okay) { _, _ ->
                 requestContacts(activity)
             }
             .create()
@@ -155,30 +158,29 @@ object Permissions {
         ActivityCompat.requestPermissions(activity, arrayOf(READ_CONTACTS), REQUEST_CODE_CONTACTS)
     }
 
-    private fun getPromptDefaultDialerDialogMessage(context: Context, isDenied: Boolean): String {
+    private fun getPromptCallScreenDialogMessage(context: Context): String {
         val appName = context.getString(R.string.app_name)
-        val msgId = if (isDenied) R.string.dialog_permissions_dialer_denied_message else R.string.dialog_permissions_dialer_message
-        return context.getString(msgId, appName)
+        return context.getString(R.string.dialog_call_screen_denied_message, appName)
     }
 
     @CheckResult
-    private fun getPromptDefaultDialerDialog(activity: Activity, message: String) = AlertDialog.Builder(activity)
+    private fun getPromptCallScreenDialog(activity: Activity, message: String) = AlertDialog.Builder(activity)
             .setIcon(R.drawable.material_phone)
-            .setTitle(R.string.dialog_permissions_dialer_title)
+            .setTitle(R.string.dialog_call_screen_title)
             .setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(R.string.dialog_permissions_okay) { _, _  ->
-                requestDefaultDialer(activity)
+            .setPositiveButton(R.string.dialog_permissions_okay) { _, _ ->
+                requestCallScreen(activity)
             }
             .create()
 
-    private fun requestDefaultDialer(activity: Activity) {
-        val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
-                .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, activity.packageName)
-        activity.startActivityForResult(intent, REQUEST_CODE_DEFAULT_DIALER)
+    private fun requestCallScreen(activity: Activity) {
+        val roleManager = activity.getSystemService<RoleManager>()!!
+        val intent = roleManager.createRequestRoleIntent("android.app.role.CALL_SCREENING")
+        activity.startActivityForResult(intent, REQUEST_CODE_CALL_SCREENING)
     }
 
-    private fun complete(permissionsContext: PermissionsContext) = with (permissionsContext) {
+    private fun complete(permissionsContext: PermissionsContext) = with(permissionsContext) {
         activeDeferred!!.complete(Unit)
         activeDeferred = null
         activeDialog = null

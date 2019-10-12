@@ -18,34 +18,34 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.net.Uri
+import android.os.StrictMode
 import android.telecom.Call
 import android.telecom.CallScreeningService
-import android.telecom.TelecomManager
-import kotlinx.coroutines.experimental.launch
-import xyz.mcomella.noncontactcallblocker.config.Config
-import xyz.mcomella.noncontactcallblocker.db.AppDB
-import xyz.mcomella.noncontactcallblocker.blocklist.BlockedCallEntity
-import xyz.mcomella.noncontactcallblocker.db.dbDispatcher
-import java.util.*
+import xyz.mcomella.noncontactcallblocker.ext.resetAfter
+import xyz.mcomella.noncontactcallblocker.ext.serviceLocator
+import java.util.Date
 
 /** The call blocking logic in the app. */
 class CallBlockService : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
-        val number = callDetails.intentExtras[TelecomManager.EXTRA_INCOMING_CALL_ADDRESS] as Uri? // tel:...
-        val isCallBlocked = when {
-            !Config.get().isBlockingEnabled -> false
-            number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
-            else -> !Contacts.isNumberInContacts(contentResolver, number)
+        val number = callDetails.handle
+
+        // Strict mode override: this method needs to block and we need to read from disk to get contacts.
+        val isCallBlocked = StrictMode.allowThreadDiskReads().resetAfter {
+            when {
+                !serviceLocator.config.isBlockingEnabled -> false
+                number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
+                else -> !serviceLocator.contactsRepository.isNumberInContacts(number)
+
+            }
         }
 
         respondToCall(callDetails, getCallResponse(isCallBlocked))
         if (isCallBlocked) {
-            val blockedCall = BlockedCallEntity(number?.schemeSpecificPart, Date(System.currentTimeMillis()))
-            launch(dbDispatcher) {
-                AppDB.db.blockedCallDao().insertBlockedCalls(blockedCall)
-            }
+            val numberStr = number?.schemeSpecificPart
+            val date = Date(System.currentTimeMillis())
+            serviceLocator.blockedCallRepository.onCallBlocked(numberStr, date)
         }
     }
 
