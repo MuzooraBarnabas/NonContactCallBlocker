@@ -20,6 +20,8 @@ package xyz.mcomella.noncontactcallblocker.ui.blocklist
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -28,8 +30,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import xyz.mcomella.noncontactcallblocker.ext.testValue
@@ -51,8 +51,8 @@ class CallBlockListViewModelTest {
     @Before
     fun setUp() {
         repoBlockedCalls = MutableLiveData()
-        val repository = mock(BlockedCallRepository::class.java).also {
-            `when`(it.getBlockedCalls()).thenReturn(repoBlockedCalls)
+        val repository = mockk<BlockedCallRepository>().also {
+            every { it.getBlockedCalls() } returns repoBlockedCalls
         }
         viewModel = CallBlockListViewModel(repository)
     }

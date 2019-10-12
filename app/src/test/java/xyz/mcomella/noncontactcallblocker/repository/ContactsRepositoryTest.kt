@@ -19,21 +19,21 @@
 package xyz.mcomella.noncontactcallblocker.repository
 
 import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
 import android.net.Uri
+import android.provider.ContactsContract
+import android.provider.ContactsContract.CommonDataKinds.Phone
+import androidx.test.core.app.ApplicationProvider
+import io.mockk.spyk
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.spy
 import org.robolectric.RobolectricTestRunner
-import android.provider.ContactsContract.CommonDataKinds.Phone
-import android.provider.ContactsContract.Contacts.Entity.RAW_CONTACT_ID
-import android.content.ContentValues
-import android.database.DatabaseUtils
-import android.provider.ContactsContract
-import org.junit.Assert.assertTrue
-
 
 @RunWith(RobolectricTestRunner::class)
 class ContactsRepositoryTest {
@@ -43,7 +43,7 @@ class ContactsRepositoryTest {
 
     @Before
     fun setUp() {
-        contentResolver = spy(ContentResolver::class.java)
+        contentResolver = spyk(ApplicationProvider.getApplicationContext<Context>().contentResolver)
         repo = ContactsRepository(contentResolver)
     }
 
@@ -53,22 +53,24 @@ class ContactsRepositoryTest {
         // tel:6505555555
     }
 
-    // todo: test ContactsRepository. integration test?
     @Test
+    @Ignore // need to figure out how to insert contacts and pray it works with Robolectric.
     fun insertTest() {
-        val values = ContentValues()
-        values.put(ContactsContract.Data.RAW_CONTACT_ID, 1)
-        values.put(ContactsContract.Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-        values.put(Phone.NUMBER, "1-800-GOOG-411")
-        values.put(Phone.TYPE, Phone.TYPE_CUSTOM)
-        values.put(Phone.LABEL, "free directory assistance")
+        val values = ContentValues().apply {
+            put(ContactsContract.Data.RAW_CONTACT_ID, 1)
+            put(ContactsContract.Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+            put(Phone.NUMBER, "1-800-GOOG-411")
+            put(Phone.TYPE, Phone.TYPE_CUSTOM)
+            put(Phone.LABEL, "free directory assistance")
+        }
         val dataUri = contentResolver.insert(ContactsContract.Data.CONTENT_URI, values)
+        assertNotNull(dataUri)
+
         println(dataUri)
 
 //        val contentUri: Uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI, "")
-
-        val cursor = contentResolver.query(dataUri, null, null, null, null)
-        DatabaseUtils.dumpCursor(cursor)
+//        val cursor = contentResolver.query(dataUri!!, null, null, null, null)
+//        DatabaseUtils.dumpCursor(cursor)
 
         assertTrue(repo.isNumberInContacts(Uri.parse("tel:1800GOOG411")))
     }

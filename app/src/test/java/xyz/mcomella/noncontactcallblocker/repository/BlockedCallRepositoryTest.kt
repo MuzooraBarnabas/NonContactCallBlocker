@@ -19,14 +19,15 @@
 package xyz.mcomella.noncontactcallblocker.repository
 
 import androidx.lifecycle.LiveData
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallDao
 import xyz.mcomella.noncontactcallblocker.db.BlockedCallEntity
 import java.util.Date
@@ -34,29 +35,28 @@ import java.util.Date
 class BlockedCallRepositoryTest {
 
     private lateinit var repository: BlockedCallRepository
-    private lateinit var dao: BlockedCallDao
+    @MockK(relaxed = true) private lateinit var dao: BlockedCallDao
 
     @Before
     fun setUp() {
-        dao = mock(BlockedCallDao::class.java)
+        MockKAnnotations.init(this)
         repository = BlockedCallRepository(dao)
     }
 
     @Test // A better test would test the inputs/outputs are the same but this is good enough for now.
     fun `WHEN loading blocked calls THEN the value directly from the DB is returned`() {
-        @Suppress("UNCHECKED_CAST") // Can't do generics in mock method, I think.
-        val expected = mock(LiveData::class.java) as LiveData<List<BlockedCallEntity>>
-        `when`(dao.loadBlockedCalls()).thenReturn(expected)
+        val expected: LiveData<List<BlockedCallEntity>> = mockk()
+        every { dao.loadBlockedCalls() } returns expected
         assertEquals(expected, repository.getBlockedCalls())
     }
 
-    @Test
+    @Test // A better test would test the input/outputs.
     fun `WHEN a repository receives a blocked call THEN the DAO tries to insert it`() = runBlocking {
         val expectedNumber = "55555555555"
         val expectedDate = Date(1234567)
         val expectedEntity = BlockedCallEntity(expectedNumber, expectedDate)
 
         repository.onCallBlocked(expectedNumber, expectedDate)
-        verify(dao, times(1)).insertBlockedCalls(expectedEntity)
+        verify { dao.insertBlockedCalls(expectedEntity) }
     }
 }
