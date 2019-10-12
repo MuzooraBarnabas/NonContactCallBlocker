@@ -21,6 +21,8 @@ package xyz.mcomella.noncontactcallblocker
 import android.os.StrictMode
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import android.telephony.TelephonyManager
+import androidx.core.content.getSystemService
 import xyz.mcomella.noncontactcallblocker.ext.resetAfter
 import xyz.mcomella.noncontactcallblocker.ext.serviceLocator
 import java.util.Date
@@ -36,6 +38,7 @@ class CallBlockService : CallScreeningService() {
             when {
                 !serviceLocator.config.isBlockingEnabled -> false
                 number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
+                getSystemService<TelephonyManager>()!!.isEmergencyNumber(number.toString()) -> false
                 else -> !serviceLocator.contactsRepository.isNumberInContacts(number)
             }
         }
