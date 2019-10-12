@@ -18,10 +18,10 @@
 
 package xyz.mcomella.noncontactcallblocker
 
-import android.net.Uri
+import android.os.StrictMode
 import android.telecom.Call
 import android.telecom.CallScreeningService
-import android.telecom.TelecomManager
+import xyz.mcomella.noncontactcallblocker.ext.resetAfter
 import xyz.mcomella.noncontactcallblocker.ext.serviceLocator
 import java.util.Date
 
@@ -29,11 +29,16 @@ import java.util.Date
 class CallBlockService : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
-        val number = callDetails.intentExtras[TelecomManager.EXTRA_INCOMING_CALL_ADDRESS] as Uri? // tel:...
-        val isCallBlocked = when {
-            !serviceLocator.config.isBlockingEnabled -> false
-            number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
-            else -> !serviceLocator.contactsRepository.isNumberInContacts(number)
+        val number = callDetails.handle
+
+        // Strict mode override: this method needs to block and we need to read from disk to get contacts.
+        val isCallBlocked = StrictMode.allowThreadDiskReads().resetAfter {
+            when {
+                !serviceLocator.config.isBlockingEnabled -> false
+                number == null -> true // It's an assumption this is an unknown number, but we want to block unknown numbers.
+                else -> !serviceLocator.contactsRepository.isNumberInContacts(number)
+
+            }
         }
 
         respondToCall(callDetails, getCallResponse(isCallBlocked))
