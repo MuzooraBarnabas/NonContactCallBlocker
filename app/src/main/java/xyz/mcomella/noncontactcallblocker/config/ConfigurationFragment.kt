@@ -37,7 +37,7 @@ class ConfigurationFragment : PreferenceFragmentCompat(), SharedPreferences.OnSh
         StrictMode.allowThreadDiskWrites().resetAfter {
             setPreferencesFromResource(R.xml.prefs_configuration, rootKey)
         }
-        globalEnablePreference = findPreference(context!!.getString(R.string.key_global_enable)) as SwitchPreference
+        globalEnablePreference = findPreference(context!!.getString(R.string.key_global_enable))!!
         context!!.serviceLocator.config.sharedPrefs.registerOnSharedPreferenceChangeListener(this)
     }
 
